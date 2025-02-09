@@ -1,0 +1,151 @@
+{
+  "bong": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:bong1",
+        "stream": true
+      },
+      {
+        "name": "star:bong2",
+        "stream": true
+      },
+      {
+        "name": "star:bong3",
+        "stream": true
+      }
+    ]
+  },
+  "bigbong": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:bigbong1",
+        "stream": true
+      },
+      {
+        "name": "star:bigbong2",
+        "stream": true
+      },
+      {
+        "name": "star:bigbong3",
+        "stream": true
+      },
+      {
+        "name": "star:bigbong4",
+        "stream": true
+      }
+    ]
+  },
+  "danger": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:danger",
+        "stream": true
+      }
+    ]
+  },
+  "duang1": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:duang1",
+        "stream": true
+      }
+    ]
+  },
+  "duang2": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:duang2",
+        "stream": true
+      }
+    ]
+  },
+  "foresight": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:foresight",
+        "stream": true
+      }
+    ]
+  },
+  "yamato_step": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:yamato_step",
+        "stream": true
+      }
+    ]
+  },
+  "sekiro": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:sekiro",
+        "stream": true
+      }
+    ]
+  },
+  "chua": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:chua",
+        "stream": true
+      }
+    ]
+  },
+  "peng": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:peng",
+        "stream": true
+      }
+    ]
+  },
+  "yamato_in": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:yamato_in",
+        "stream": true
+      },
+      {
+        "name": "star:yamato_in2",
+        "stream": true
+      }
+    ]
+  },
+  "yilianjieyvan": {
+    "sounds": [
+      {
+        "name": "star:yuzusoft",
+        "stream": false
+      }
+    ]
+  },
+  "ciallo": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:ciallo",
+        "stream": false
+      }
+    ]
+  },
+  "ding": {
+    "category":"master",
+    "sounds": [
+      {
+        "name": "star:ding",
+        "stream": true
+      }
+    ]
+  }
+}
