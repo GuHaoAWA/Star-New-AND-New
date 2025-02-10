@@ -288,10 +288,10 @@ public abstract class AdvancedCustomHumanoidMobPatchMixin<T extends PathfinderMo
 
     @Inject(method = "<init>",at = @At("TAIL"))
     public void AdvancedCustomHumanoidMobPatch(Faction faction, AdvancedMobpatchReloader.AdvancedCustomHumanoidMobPatchProvider provider, CallbackInfo ci) {
-        if (this.getOriginal().hasEffect(Effect.TOUGHNESS.get())) {
+        if (this.getOriginal() != null && this.getOriginal().hasEffect(Effect.TOUGHNESS.get())) {
             this.reganShieldMultiply = this.provider.getReganShieldMultiply()*(1f - (0.1f*this.getOriginal().getEffect(Effect.TOUGHNESS.get()).getAmplifier()));
         }
-        if (this.getOriginal().getEffect(Effect.TOUGHNESS.get()).getAmplifier() >= 10)
+        if (this.getOriginal() != null && this.getOriginal().getEffect(Effect.TOUGHNESS.get()).getAmplifier() >= 10)
             this.reganShieldMultiply = 0.0f;
 
     }

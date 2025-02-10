@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.ModList;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -90,6 +91,7 @@ public abstract class GuardMixin extends Skill {
         ci.cancel();
         DamageSource damageSource = event.getDamageSource();
         EpicFightDamageSource epicFightDamageSource = Guard_Array.getEpicFightDamageSources(damageSource);
+
         if (epicFightDamageSource != null) {
             StaticAnimation an = epicFightDamageSource.getAnimation();
             if (!(Arrays.asList(star_new$GUARD).contains(an)) && !(Arrays.asList(star_new$PARRY).contains(an))) {
@@ -144,7 +146,12 @@ public abstract class GuardMixin extends Skill {
                         if (blockType == GuardSkill.BlockType.GUARD_BREAK) {
                             event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
                         }
-
+                        if  (event.getDamageSource().getDirectEntity() instanceof LivingEntity livingEntity) {
+                            knockback += (float) EnchantmentHelper.getKnockbackBonus(livingEntity) * 0.1F;
+                            Vec3 lookVec = livingEntity.getLookAngle();
+                            Vec3 pushVec = new Vec3(-lookVec.x, 0, -lookVec.z).normalize().scale(knockback);
+                            livingEntity.push(pushVec.x, pushVec.y, pushVec.z);
+                        }
                         dealEvent(event.getPlayerPatch(), event, advanced);
                     }
                 }

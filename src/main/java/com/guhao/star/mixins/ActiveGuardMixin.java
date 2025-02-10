@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.ModList;
 import org.spongepowered.asm.mixin.*;
@@ -188,7 +189,7 @@ public class ActiveGuardMixin extends GuardSkill {
                                     EpicFightParticles.EVISCERATE.get().spawnParticleWithArgument((ServerLevel) playerentity.level, HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, playerentity, damageSource.getDirectEntity());
                                 }
                                 penalty = 0.0F;
-                                knockback *= 0.0F;
+                                knockback *= 0.4F;
                                 container.getDataManager().setData(LAST_ACTIVE, 0);
                                 if (event.getDamageSource().getDirectEntity() instanceof Monster) {
                                     Entity L = event.getDamageSource().getDirectEntity();
@@ -232,6 +233,11 @@ public class ActiveGuardMixin extends GuardSkill {
                         }
                         if (blockType == BlockType.GUARD_BREAK) {
                             event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
+                        }
+                        if  (event.getDamageSource().getDirectEntity() instanceof LivingEntity livingEntity) {
+                            Vec3 lookVec = livingEntity.getLookAngle();
+                            Vec3 pushVec = new Vec3(-lookVec.x, 0, -lookVec.z).normalize().scale(knockback);
+                            livingEntity.push(pushVec.x, pushVec.y, pushVec.z);
                         }
                         this.dealEvent(event.getPlayerPatch(), event, advanced);
                         return;
@@ -300,7 +306,11 @@ public class ActiveGuardMixin extends GuardSkill {
                     if (blockType == BlockType.GUARD_BREAK) {
                         event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
                     }
-
+                    if  (event.getDamageSource().getDirectEntity() instanceof LivingEntity livingEntity) {
+                        Vec3 lookVec = livingEntity.getLookAngle();
+                        Vec3 pushVec = new Vec3(-lookVec.x, 0, -lookVec.z).normalize().scale(knockback);
+                        livingEntity.push(pushVec.x, pushVec.y, pushVec.z);
+                    }
                     this.dealEvent(event.getPlayerPatch(), event, advanced);
                     return;
                 }
