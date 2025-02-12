@@ -15,10 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Mob.class)
 public abstract class MixinMob extends LivingEntity {
-
-    @Shadow @Final
-    private BodyRotationControl bodyRotationControl;
-
+    
     public MixinMob(Level level) {
         super(null, level);
     }
