@@ -228,18 +228,13 @@ public abstract class GuardMixin extends Skill {
             remap = false
     )
     private float setImpact(float impact) {
-        if (ModList.get().isLoaded("epicparagliders") && (Boolean) CommonConfig.EPIC_PARAGLIDER_COMPAT.get()) {
-            return impact;
+        float blockrate = 1.0F - Math.min((float)((ServerPlayer)((ServerPlayerPatch)this.event.getPlayerPatch()).getOriginal()).getAttributeValue((Attribute)ToyBoxAttributes.BLOCK_RATE.get()) / 100.0F, 0.9F);
+        Object var4 = this.event.getDamageSource();
+        if (var4 instanceof EpicFightDamageSource epicdamagesource) {
+            float k = epicdamagesource.getImpact();
+            return this.event.getAmount() / 4.0F * (1.0F + k / 2.0F) * blockrate;
         } else {
-            float blockrate = 1.0F - Math.min((float)((ServerPlayer)((ServerPlayerPatch)this.event.getPlayerPatch()).getOriginal()).getAttributeValue((Attribute) ToyBoxAttributes.BLOCK_RATE.get()) / 100.0F, 0.9F);
-            Object var4 = this.event.getDamageSource();
-            if (var4 instanceof EpicFightDamageSource) {
-                EpicFightDamageSource epicdamagesource = (EpicFightDamageSource)var4;
-                float k = epicdamagesource.getImpact();
-                return this.event.getAmount() / 4.0F * (1.0F + k / 2.0F) * blockrate;
-            } else {
-                return this.event.getAmount() / 3.0F * blockrate;
-            }
+            return this.event.getAmount() / 3.0F * blockrate;
         }
     }
 }

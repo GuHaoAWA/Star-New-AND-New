@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
@@ -39,6 +40,7 @@ import yesman.epicfight.skill.guard.ParryingSkill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.entity.eventlistener.HurtEvent;
@@ -335,18 +337,13 @@ public class ActiveGuardMixin extends GuardSkill {
             remap = false
     )
     private float setImpact(float impact) {
-        if (ModList.get().isLoaded("epicparagliders") && CommonConfig.EPIC_PARAGLIDER_COMPAT.get()) {
-            return impact;
+        float blockrate = 1.0F - Math.min((float)((ServerPlayer)((ServerPlayerPatch)this.event.getPlayerPatch()).getOriginal()).getAttributeValue((Attribute)ToyBoxAttributes.BLOCK_RATE.get()) / 100.0F, 0.9F);
+        Object var4 = this.event.getDamageSource();
+        if (var4 instanceof EpicFightDamageSource epicdamagesource) {
+            float k = epicdamagesource.getImpact();
+            return this.event.getAmount() / 4.0F * (1.0F + k / 2.0F) * blockrate;
         } else {
-            float blockrate = 1.0F - Math.min((float) this.event.getPlayerPatch().getOriginal().getAttributeValue(ToyBoxAttributes.BLOCK_RATE.get()) / 100.0F, 0.9F);
-            Object var4 = this.event.getDamageSource();
-            if (var4 instanceof EpicFightDamageSource) {
-                EpicFightDamageSource epicdamagesource = (EpicFightDamageSource) var4;
-                float k = epicdamagesource.getImpact();
-                return this.event.getAmount() / 4.0F * (1.0F + k / 2.0F) * blockrate;
-            } else {
-                return this.event.getAmount() / 3.0F * blockrate;
-            }
+            return this.event.getAmount() / 3.0F * blockrate;
         }
     }
 }
