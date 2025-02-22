@@ -236,11 +236,11 @@ public class ActiveGuardMixin extends GuardSkill {
                         if (blockType == BlockType.GUARD_BREAK) {
                             event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
                         }
-                        if  (event.getDamageSource().getDirectEntity() instanceof LivingEntity livingEntity) {
-                            Vec3 lookVec = livingEntity.getLookAngle();
-                            Vec3 pushVec = new Vec3(-lookVec.x, 0, -lookVec.z).normalize().scale(knockback);
-                            livingEntity.push(pushVec.x, pushVec.y, pushVec.z);
-                        }
+
+//                        Vec3 lookVec = playerentity.getLookAngle();
+//                        Vec3 pushVec = new Vec3(-lookVec.x, 0, -lookVec.z).normalize().scale(knockback);
+//                        playerentity.push(pushVec.x, pushVec.y, pushVec.z);
+
                         this.dealEvent(event.getPlayerPatch(), event, advanced);
                         return;
                     }
@@ -308,11 +308,11 @@ public class ActiveGuardMixin extends GuardSkill {
                     if (blockType == BlockType.GUARD_BREAK) {
                         event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
                     }
-                    if  (event.getDamageSource().getDirectEntity() instanceof LivingEntity livingEntity) {
-                        Vec3 lookVec = livingEntity.getLookAngle();
-                        Vec3 pushVec = new Vec3(-lookVec.x, 0, -lookVec.z).normalize().scale(knockback);
-                        livingEntity.push(pushVec.x, pushVec.y, pushVec.z);
-                    }
+
+//                        Vec3 lookVec = playerentity.getLookAngle();
+//                        Vec3 pushVec = new Vec3(-lookVec.x, 0, -lookVec.z).normalize().scale(knockback);
+//                        playerentity.push(pushVec.x, pushVec.y, pushVec.z);
+
                     this.dealEvent(event.getPlayerPatch(), event, advanced);
                     return;
                 }

@@ -18,6 +18,7 @@
     "GuardGoalMixin",
     "GuardMixin",
     "HumanoidMobPatchMixin",
+    "HurtableEntityPatchMixin",
     "KnockdownWakeupSkillMixin",
     "LiechtenauerSkillMixin",
     "LivingEntityMixin",

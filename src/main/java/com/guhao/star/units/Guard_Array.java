@@ -60,6 +60,9 @@ public record Guard_Array() {
                  Animations.LONGSWORD_DASH,
                  Animations.REVELATION_ONEHAND,
                  StarAnimations.BLADE_RUSH_FINISHER,
+                 StarAnimations.LONGSWORD_OLD_DASH,
+                 StarAnimations.ZWEI_DASH,
+                 StarAnimations.SSPEAR_DASH,
                  WOMAnimations.HERRSCHER_AUTO_2,
                  WOMAnimations.STAFF_KINKONG,
                  WOMAnimations.SOLAR_HORNO,
@@ -80,7 +83,6 @@ public record Guard_Array() {
                 WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_LAYED_LEFT,
                 WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_LAYED_RIGHT,
                 WOMAnimations.ENDERBLASTER_ONEHAND_SHOOT_DASH,
-                WOMAnimations.SOLAR_AUTO_2_POLVORA
         };//see_through
         CANDODGE = new StaticAnimation[]{
                 Animations.UCHIGATANA_DASH,

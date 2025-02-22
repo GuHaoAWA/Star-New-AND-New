@@ -1,6 +1,5 @@
 package com.guhao.star.effects;
 
-import com.guhao.star.event.DingEndEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,11 +21,7 @@ public class Ding extends MobEffect {
         return true;
     }
 
-    @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
-        super.removeAttributeModifiers(entity, attributeMap, amplifier);
-         DingEndEvent.execute(entity.level, entity);
-    }
+
 
 
 }
