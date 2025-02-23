@@ -1,5 +1,6 @@
 package com.guhao.star.event;
 
+import io.redspace.ironsspellbooks.entity.spells.blood_needle.BloodNeedle;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -12,7 +13,7 @@ import javax.annotation.Nullable;
 public class HurtCancelEvent {
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
-        if (event != null && event.getEntity() != null && event.getSource().getEntity() == event.getEntity()) {
+        if (event != null && event.getEntity() != null && event.getSource().getEntity() == event.getEntity() && event.getSource().getDirectEntity() instanceof BloodNeedle) {
             event.setCanceled(true);
         }
     }
