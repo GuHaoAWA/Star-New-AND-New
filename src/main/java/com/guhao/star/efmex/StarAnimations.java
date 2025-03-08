@@ -1,10 +1,7 @@
 package com.guhao.star.efmex;
 
 import com.dfdyz.epicacg.client.camera.CameraAnimation;
-import com.guhao.star.api.animation.types.BasicAttackWinAnimation;
-import com.guhao.star.api.animation.types.DodgeAttackAnimation;
-import com.guhao.star.api.animation.types.SpecialActionAnimation;
-import com.guhao.star.api.animation.types.YamtoAttackAnimation;
+import com.guhao.star.api.animation.types.*;
 import com.guhao.star.regirster.Effect;
 import com.guhao.star.regirster.ParticleType;
 import com.guhao.star.regirster.Sounds;
@@ -51,6 +48,7 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+import yesman.epicfight.world.damagesource.ExtraDamageInstance;
 import yesman.epicfight.world.damagesource.SourceTags;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.eventlistener.ComboCounterHandleEvent;
@@ -78,6 +76,8 @@ public class StarAnimations {
     public static StaticAnimation HANGDANG;
     public static StaticAnimation AOXUE;
     public static StaticAnimation AOXUE2;
+    public static StaticAnimation EXECUTE_WEAPON;
+    public static StaticAnimation EXECUTED_WEAPON;
 
 
     //////////////////////////////////////////////////////////////
@@ -1098,7 +1098,54 @@ public class StarAnimations {
                             Entity entity = entitypatch.getOriginal();
                             entity.level.addParticle(EpicFightParticles.ENTITY_AFTER_IMAGE.get(), entity.getX(), entity.getY(), entity.getZ(), Double.longBitsToDouble(entity.getId()), 0, 0);
                         }, AnimationEvent.Side.CLIENT)
-                );    }
+                );
+        EXECUTE_WEAPON = new ExecuteAnimation(0.05F, 0.0F, 2.65F, 1.3F, 1.75F, 0.7F, 2.65F, 0.0F, 0.0F,  "biped/new/skill/execute_weapon", biped,
+                new AttackAnimation.Phase(0.0F, 0.75F, 0.51F, 0.95F,  3.10F, biped.toolR, StarNewColliderPreset.EXECUTE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(0.1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, Sounds.DUANG1),
+                new AttackAnimation.Phase(3F, 3.05F, 3.15F, 6.0F, Float.MAX_VALUE, biped.rootJoint, StarNewColliderPreset.EXECUTE_SECOND)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.KNOCKDOWN)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.setter(100.0F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.EVISCERATE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.TARGET_LOST_HEALTH.create(0.25F))))
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_ON_LINK, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+
+                .addEvents(
+                        AnimationEvent.TimeStampedEvent.create(0F, (entitypatch, animation, params) -> {
+                        }, AnimationEvent.Side.CLIENT),
+                        AnimationEvent.TimeStampedEvent.create(3.1F, STAMINASKILL, AnimationEvent.Side.SERVER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE);
+
+        EXECUTED_WEAPON = new LongHitAnimation(0.01F, "biped/new/skill/executed_weapon", biped)
+                .addProperty(AnimationProperty.ActionAnimationProperty.CANCELABLE_MOVE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 4.0F))
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, EXECUT);
+
+    }
+
+    public static final AnimationProperty.PlaybackTimeModifier EXECUT = (self, entitypatch, speed, elapsedTime) -> 0.85F;
+
     public static final AnimationEvent.AnimationEventConsumer STAMINA = (entitypatch, animation, params) -> {
         if (entitypatch instanceof PlayerPatch) {
             PlayerPatch<?> playerPatch = (PlayerPatch<?>) entitypatch;
