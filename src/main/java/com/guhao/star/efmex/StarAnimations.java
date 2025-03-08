@@ -598,8 +598,11 @@ public class StarAnimations {
                         }, AnimationEvent.Side.CLIENT)
                 );
         BLADE_RUSH_FINISHER = new AttackAnimation(0.15F, 0.0F, 0.1F, 0.16F, 0.65F, StarNewColliderPreset.BLADE_RUSH_FINISHER, biped.rootJoint, "biped/new/blade_rush_finisher", biped)
-                .addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, true).addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER)
-                .addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL).addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE);
+                .addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, true)
+                .addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER)
+                .addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)
+                .addProperty(AttackPhaseProperty.SOURCE_TAG, Set.of(SourceTags.FINISHER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE);
 
         MORTAL_BLADE = new BasicAttackAnimation(0.15F, 0.2F, 0.3F, 0.5F, StarNewColliderPreset.MORTAL_BLADE, biped.toolR, "biped/new/tachi_auto2", biped)
                 .addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 0.9F);
