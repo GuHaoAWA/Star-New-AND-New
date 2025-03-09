@@ -3,6 +3,7 @@ package com.guhao.star.event;
 import com.guhao.star.efmex.StarAnimations;
 import com.guhao.star.regirster.Effect;
 import com.guhao.star.regirster.Sounds;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -70,14 +71,15 @@ public class ExecuteEvent {
 
 //                            if (sekiro.contains(pp.getAdvancedHoldingItemCapability(InteractionHand.MAIN_HAND).getWeaponCategory())) {
                                 ep.playSound(Sounds.SEKIRO, 1.0F, 1.0F);
-                                player.teleportTo(ep.getOriginal().getX() + viewVec.x() * 1.85, ep.getOriginal().getY(), ep.getOriginal().getZ() + viewVec.z() * 1.85);
-//                                player.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(ep.getOriginal().getX(), ep.getOriginal().getEyeY() - 0.1, ep.getOriginal().getZ()));
-//                                ep.getOriginal().lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(player.getX(), player.getEyeY() - 0.1, player.getZ()));
-//                                player.addEffect(new MobEffectInstance(Effect.EXECUTE.get(), 100, 1));
+                                player.teleportTo(ep.getOriginal().getX() + viewVec.x() * 1.1, ep.getOriginal().getY(), ep.getOriginal().getZ() + viewVec.z() * 1.1);
+                                player.setPos(ep.getOriginal().getX() + viewVec.x() * 1.1, ep.getOriginal().getY(), ep.getOriginal().getZ() + viewVec.z() * 1.1);
+                                player.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(ep.getOriginal().getX(), ep.getOriginal().getEyeY() - 0.1, ep.getOriginal().getZ()));
+                                ep.getOriginal().lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(player.getX(), player.getEyeY() - 0.1, player.getZ()));
+//                                pp.getOriginal().addEffect(new MobEffectInstance(Effect.EXECUTE.get(), 100, 1));
                                 ep.getOriginal().addEffect(new MobEffectInstance(Effect.EXECUTED.get(), 100, 1));
                                 ep.getOriginal().addEffect(new MobEffectInstance(EpicFightMobEffects.STUN_IMMUNITY.get(), 100, 1));
-                                pp.playAnimationSynchronized(StarAnimations.EXECUTE_SEKIRO, 0.0F);
-                                if (!level.isClientSide()) ep.playAnimationSynchronized(StarAnimations.EXECUTED_SEKIRO, 0.0F, SPPlayAnimation::new);
+                                pp.playAnimationSynchronized(StarAnimations.EXECUTE_WEAPON, 0.0F);
+                                if (!level.isClientSide()) ep.playAnimationSynchronized(StarAnimations.EXECUTED_WEAPON, 0.0F, SPPlayAnimation::new);
                                 break;
                             }
 //                          else {

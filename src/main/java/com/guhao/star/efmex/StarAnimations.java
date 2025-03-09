@@ -261,7 +261,7 @@ public class StarAnimations {
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((entitypatch, animation, params) -> {
                     entitypatch.getOriginal().removeEffect(Effect.EXECUTED.get());
                     entitypatch.getOriginal().removeEffect(Effect.EXECUTE.get());
-                }, AnimationEvent.Side.CLIENT))
+                }, AnimationEvent.Side.BOTH))
                 .addState(EntityState.MOVEMENT_LOCKED, true)
                 .addState(EntityState.TURNING_LOCKED, true)
                 .addState(EntityState.LOCKON_ROTATE, true)
@@ -1103,24 +1103,28 @@ public class StarAnimations {
                         }, AnimationEvent.Side.CLIENT)
                 );
         EXECUTE_WEAPON = new ExecuteAnimation(0.05F, 0.0F, 2.65F, 1.3F, 1.75F, 0.7F, 2.65F, 0.0F, 0.0F,  "biped/new/skill/execute_weapon", biped,
-                new AttackAnimation.Phase(0.0F, 0.75F, 0.51F, 0.95F,  3.10F, biped.toolR, StarNewColliderPreset.EXECUTE)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(0.1F))
+                new AttackAnimation.Phase(0.0F, 0.75F, 0.51F, 0.95F,  2.99F, biped.toolR, StarNewColliderPreset.EXECUTE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.setter(100.0F))
+                        .addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(WOMExtraDamageInstance.WOM_TARGET_MAX_HEALTH.create(0.06F)))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(6.0F))
                         .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
                         .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)
                         .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, Sounds.DUANG1),
                 new AttackAnimation.Phase(3F, 3.05F, 3.15F, 6.0F, Float.MAX_VALUE, biped.rootJoint, StarNewColliderPreset.EXECUTE_SECOND)
                         .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.KNOCKDOWN)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.setter(100.0F))
-                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.EVISCERATE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(0.1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, Sounds.DUANG2)
                         .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2F))
-                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
-                        .addProperty(AnimationProperty.AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.TARGET_LOST_HEALTH.create(0.25F))))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F)))
                 .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
                 .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_ON_LINK, false)
                 .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_LOCROT_TARGET)
                 .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((entitypatch, animation, params) -> {
+                    entitypatch.getOriginal().removeEffect(Effect.EXECUTED.get());
+                    entitypatch.getOriginal().removeEffect(Effect.EXECUTE.get());
+                }, AnimationEvent.Side.BOTH))
                 .addState(EntityState.MOVEMENT_LOCKED, true)
                 .addState(EntityState.TURNING_LOCKED, true)
                 .addState(EntityState.LOCKON_ROTATE, true)
@@ -1138,6 +1142,10 @@ public class StarAnimations {
                 .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
                 .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, false)
                 .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 4.0F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((entitypatch, animation, params) -> {
+                    entitypatch.getOriginal().removeEffect(Effect.EXECUTED.get());
+                    entitypatch.getOriginal().removeEffect(Effect.EXECUTE.get());
+                }, AnimationEvent.Side.BOTH))
                 .addState(EntityState.MOVEMENT_LOCKED, true)
                 .addState(EntityState.TURNING_LOCKED, true)
                 .addState(EntityState.LOCKON_ROTATE, true)

@@ -27,7 +27,7 @@ public class LevelEvent {
 
     private static void execute(@Nullable Event event, LevelAccessor world) {
         Random random = new Random();
-        if (!world.isClientSide() && world.getServer() != null && random.nextDouble(0.0,1.0) < 0.000001)
+        if (!world.isClientSide() && world.getServer() != null && random.nextDouble(0.0,1.0) < 0.0000001)
             world.getServer().getPlayerList().broadcastMessage(new TextComponent("\u00A7eHerobrine \u52A0\u5165\u4E86\u6E38\u620F"), ChatType.SYSTEM, Util.NIL_UUID);
     }
 }
