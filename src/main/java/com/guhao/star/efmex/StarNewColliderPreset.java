@@ -20,5 +20,6 @@ public class StarNewColliderPreset {
 
     public static final Collider EXECUTE = new MultiOBBCollider(3, 0.4D, 0.4D, 1.5D, 0.0D, 0.0D, -0.5D);
     public static final Collider EXECUTE_SECOND = new MultiOBBCollider(2, 0.8, 0.8, 2.0, 0.0, 1.0D, -1.0D);
+    public static final Collider EXECUTE_SECOND_GREATSWORD = new MultiOBBCollider(2, 0.8, 1.0, 3.0, 0.0, 1.0D, 2.0D);
 
 }

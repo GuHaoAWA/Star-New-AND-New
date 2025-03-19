@@ -36,6 +36,7 @@ import yesman.epicfight.api.forgeevent.AnimationRegistryEvent;
 import yesman.epicfight.api.utils.HitEntityList;
 import yesman.epicfight.api.utils.TimePairList;
 import yesman.epicfight.api.utils.math.ValueModifier;
+import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.gameasset.ColliderPreset;
@@ -55,6 +56,7 @@ import yesman.epicfight.world.entity.eventlistener.ComboCounterHandleEvent;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static com.guhao.star.Star.MODID;
@@ -193,6 +195,21 @@ public class StarAnimations {
     public static StaticAnimation SSTEP_BACKWARD;
     public static StaticAnimation SSTEP_RIGHT;
     public static StaticAnimation SSTEP_LEFT;
+
+
+
+    //处决
+
+    public static StaticAnimation SPEAR_EXECUTE;
+    public static StaticAnimation SPEAR_EXECUTED;
+    public static StaticAnimation GREATSWORD_EXECUTE;
+    public static StaticAnimation GREATSWORD_EXECUTED;
+    public static StaticAnimation DAGGER_EXECUTE;
+    public static StaticAnimation DAGGER_EXECUTED;
+    public static StaticAnimation TACHI_EXECUTE;
+    public static StaticAnimation TACHI_EXECUTED;
+
+
 
     public static void init() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(StarAnimations::registerAnimations);
@@ -1153,10 +1170,222 @@ public class StarAnimations {
                 .addState(EntityState.CAN_BASIC_ATTACK, false)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, EXECUT);
 
+
+        TACHI_EXECUTED = new LongHitAnimation(0.05F, "biped/new/skill/tachi_executed", biped)
+                .addProperty(AnimationProperty.ActionAnimationProperty.CANCELABLE_MOVE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 4.0F))
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, TACHI_EX);
+
+
+        TACHI_EXECUTE = new ExecuteAnimation(0.05F, 0.0F, 2.65F, 1.3F, 1.75F, 0.7F, 2.65F, 0.0F, 0.0F,  "biped/new/skill/tachi_execute", biped,
+                new AttackAnimation.Phase(0.0F, 0.35F, 0.41F, 0.45F,  0.5F, biped.rootJoint, StarNewColliderPreset.EXECUTE_SECOND)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.setter(0.5F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLUNT_HIT_HARD)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE),
+                new AttackAnimation.Phase(0.5F, 0.55F, 0.75F, 0.95F,  1.0F, biped.toolR, StarNewColliderPreset.EXECUTE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(0.1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.EVISCERATE),
+                new AttackAnimation.Phase(1.0F, 1.35F, 1.55F, Float.MAX_VALUE, Float.MAX_VALUE, biped.rootJoint, StarNewColliderPreset.EXECUTE_SECOND)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.setter(100.0F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, Sounds.DUANG1)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.TARGET_LOST_HEALTH.create(0.25F))))
+                .addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_ON_LINK, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(0.0F, 1.55F))
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addEvents(
+                        AnimationEvent.TimeStampedEvent.create(1.35F, (entitypatch, animation, params) -> {
+                            Vec3 direction = entitypatch.getOriginal().getLookAngle();
+                            for (int x = -1; x <= 1; x += 1) {for (int z = -1; z <= 1; z += 1) {double offsetX = (Math.random() - 0.5) * 2.0 * x;double offsetY = (Math.random() - 0.5);double offsetZ = (Math.random() - 0.5) * 2.0 * z;
+                                double distance = 1.5;double particleX = entitypatch.getOriginal().getX() + direction.x * distance + offsetX;double particleY = entitypatch.getOriginal().getY() + direction.y * distance + 1.2 + offsetY;double particleZ = entitypatch.getOriginal().getZ() + direction.z * distance + offsetZ;
+                                entitypatch.getOriginal().level.addParticle(EpicFightParticles.EVISCERATE.get(), particleX, particleY, particleZ, 0, 0, 0);
+                            }
+                            }
+                        }, AnimationEvent.Side.CLIENT),
+                        AnimationEvent.TimeStampedEvent.create(2.3F, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(EpicFightSounds.WHOOSH, 0.5F, 1.1F - ((new Random()).nextFloat() - 0.5F) * 0.2F),
+                        AnimationEvent.TimeStampedEvent.create(2.85F, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(EpicFightSounds.WHOOSH, 0.5F, 1.1F - ((new Random()).nextFloat() - 0.5F) * 0.2F),
+                        AnimationEvent.TimeStampedEvent.create(3.0F, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(EpicFightSounds.WHOOSH, 0.5F, 1.1F - ((new Random()).nextFloat() - 0.5F) * 0.2F),
+                        AnimationEvent.TimeStampedEvent.create(1.3F, STAMINASKILL, AnimationEvent.Side.SERVER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, SLOW_SPEED);
+
+
+
+
+
+        GREATSWORD_EXECUTED = new LongHitAnimation(0.05F, "biped/new/skill/greatsword_executed", biped)
+                .addProperty(AnimationProperty.ActionAnimationProperty.CANCELABLE_MOVE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 4.0F))
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, EXECUT);
+
+
+        GREATSWORD_EXECUTE = new ExecuteAnimation(0.05F, 0.0F, 2.65F, 1.3F, 1.75F, 0.7F, 2.65F, 0.0F, 0.0F,  "biped/new/skill/greatsword_execute", biped,
+                new AttackAnimation.Phase(0.0F, 0.75F, 0.95F, 1.85F,  1.85F, biped.rootJoint , StarNewColliderPreset.EXECUTE_SECOND)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(0.1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER),
+                new AttackAnimation.Phase(1.85F, 2.15F, 2.55F, Float.MAX_VALUE,  Float.MAX_VALUE, biped.rootJoint, StarNewColliderPreset.EXECUTE_SECOND_GREATSWORD)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.setter(100.0F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, Sounds.DUANG1)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.TARGET_LOST_HEALTH.create(0.25F))))
+                .addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_ON_LINK, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(0.0F, 1.55F))
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addEvents(
+                        AnimationEvent.TimeStampedEvent.create(2.35F, Animations.ReusableSources.FRACTURE_GROUND_SIMPLE, AnimationEvent.Side.CLIENT).params(new Vec3f(4.0F,0.0F , 0.0F), Armatures.BIPED.rootJoint, 2.05D, 0.55F),
+                        AnimationEvent.TimeStampedEvent.create(2.35F, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(EpicFightSounds.EVISCERATE),
+                        AnimationEvent.TimeStampedEvent.create(1.3F, STAMINASKILL, AnimationEvent.Side.SERVER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, EXECUT);
+
+
+
+        SPEAR_EXECUTED = new LongHitAnimation(0.01F, "biped/new/skill/spear_executed", biped)
+                .addProperty(AnimationProperty.ActionAnimationProperty.CANCELABLE_MOVE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 4.0F))
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, EXECUT);
+
+        SPEAR_EXECUTE = new ExecuteAnimation(0.05F, 0.0F, 2.65F, 1.3F, 1.75F, 0.7F, 2.65F, 0.0F, 0.0F,  "biped/new/skill/spear_execute", biped,
+                new AttackAnimation.Phase(0.0F, 0.35F, 0.31F, 0.95F,  1.1F, biped.toolR, StarNewColliderPreset.EXECUTE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(0.1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER),
+                new AttackAnimation.Phase(1.0F, 1.15F, 1.35F, Float.MAX_VALUE,  Float.MAX_VALUE, biped.rootJoint, StarNewColliderPreset.EXECUTE_SECOND)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.setter(100.0F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, Sounds.DUANG1)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.TARGET_LOST_HEALTH.create(0.25F))))
+                .addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_ON_LINK, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addEvents(
+                        AnimationEvent.TimeStampedEvent.create(1.2F, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(EpicFightSounds.EVISCERATE),
+                        AnimationEvent.TimeStampedEvent.create(1.3F, STAMINASKILL, AnimationEvent.Side.SERVER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, SLOW_SPEED);
+
+
+        DAGGER_EXECUTED = new LongHitAnimation(0.05F, "biped/new/skill/dagger_executed", biped)
+                .addProperty(AnimationProperty.ActionAnimationProperty.CANCELABLE_MOVE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 4.0F))
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, EXECUT);
+
+
+
+        DAGGER_EXECUTE = new ExecuteAnimation(0.05F, 0.0F, 2.65F, 1.3F, 1.75F, 0.7F, 2.65F, 0.0F, 0.0F,  "biped/new/skill/dagger_execute", biped,
+                new AttackAnimation.Phase(0.0F, 0.2F, 0.30F, 0.30F,  0.35F, biped.toolR, null)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(0.1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER),
+                new AttackAnimation.Phase(0.35F, 0.45F, 0.55F, 0.95F,  1.1F, biped.toolL, null)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(0.1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER),
+                new AttackAnimation.Phase(1.0F, 1.15F, 1.35F, 1.35F,  1.3F, biped.rootJoint, StarNewColliderPreset.EXECUTE_SECOND)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.setter(100.0F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, Sounds.DUANG1)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1F))
+                        .addProperty(AnimationProperty.AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.TARGET_LOST_HEALTH.create(0.25F))),
+                new AttackAnimation.Phase(1.35F, 1.75F, 1.85F, Float.MAX_VALUE, Float.MAX_VALUE, biped.rootJoint, StarNewColliderPreset.EXECUTE_SECOND)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.STUN_TYPE, StunType.NONE)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLUNT_HIT_HARD)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT))
+                .addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_ON_LINK, false)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_LOCROT_TARGET)
+                .addState(EntityState.MOVEMENT_LOCKED, true)
+                .addState(EntityState.TURNING_LOCKED, true)
+                .addState(EntityState.LOCKON_ROTATE, true)
+                .addState(EntityState.CAN_SKILL_EXECUTION, false)
+                .addState(EntityState.CAN_BASIC_ATTACK, false)
+                .addEvents(
+                        AnimationEvent.TimeStampedEvent.create(1.2F, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(EpicFightSounds.EVISCERATE),
+                        AnimationEvent.TimeStampedEvent.create(1.3F, STAMINASKILL, AnimationEvent.Side.SERVER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, SLOW_SPEED);
+
+
+
     }
 
+    public static final AnimationProperty.PlaybackTimeModifier SLOW_SPEED = (self, entitypatch, speed, elapsedTime) -> 0.7F;
     public static final AnimationProperty.PlaybackTimeModifier EXECUT = (self, entitypatch, speed, elapsedTime) -> 0.85F;
-
+    public static final AnimationProperty.PlaybackTimeModifier TACHI_EX =  (self, entitypatch, speed, elapsedTime)-> 0.75F;
     public static final AnimationEvent.AnimationEventConsumer STAMINA = (entitypatch, animation, params) -> {
         if (entitypatch instanceof PlayerPatch) {
             PlayerPatch<?> playerPatch = (PlayerPatch<?>) entitypatch;

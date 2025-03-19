@@ -32,9 +32,7 @@ public class ExecuteAnimation extends AttackAnimation {
     protected final float lockoff;
 
     public static final Function<DamageSource, AttackResult.ResultType> DODGEABLE_SOURCE_VALIDATOR = (damagesource) -> {
-        if (damagesource instanceof EntityDamageSource
-                && !damagesource.isBypassArmor()
-                && !damagesource.isBypassInvul()) {
+        if (damagesource instanceof EntityDamageSource) {
             return AttackResult.ResultType.MISSED;
         }
 
