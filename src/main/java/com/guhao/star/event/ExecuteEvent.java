@@ -33,7 +33,7 @@ import java.util.Set;
 
 
 @Mod.EventBusSubscriber
-public class Execute {
+public class ExecuteEvent {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onRightClickEntity(PlayerInteractEvent.RightClickItem event) {
@@ -42,18 +42,18 @@ public class Execute {
     }
 
     public static void execute(Player player, Level level) {
-        if (player == null || level == null || level.isClientSide()) return;
-        Vec3 playerPosition = new Vec3(player.getX(), player.getEyeY(), player.getZ());
-        getNearbyEntities(level, playerPosition).forEach(targetEntity -> {
-            LivingEntityPatch<?> targetPatch = EpicFightCapabilities.getEntityPatch(targetEntity, LivingEntityPatch.class);
-            if (targetPatch != null && targetEntity != player) {
-                PlayerPatch<?> playerPatch = EpicFightCapabilities.getEntityPatch(player, PlayerPatch.class);
-                if (isAnimationValid(targetPatch, playerPatch)) {
-                    handleExecution((ServerPlayer) player, targetPatch, playerPatch);
+            if (player == null || level == null || level.isClientSide()) return;
+            Vec3 playerPosition = new Vec3(player.getX(), player.getEyeY(), player.getZ());
+            getNearbyEntities(level, playerPosition).forEach(targetEntity -> {
+                LivingEntityPatch<?> targetPatch = EpicFightCapabilities.getEntityPatch(targetEntity, LivingEntityPatch.class);
+                if (targetPatch != null && targetEntity != player) {
+                    PlayerPatch<?> playerPatch = EpicFightCapabilities.getEntityPatch(player, PlayerPatch.class);
+                    if (isAnimationValid(targetPatch, playerPatch)) {
+                        handleExecution((ServerPlayer) player, targetPatch, playerPatch);
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
 
     private static List<LivingEntity> getNearbyEntities(Level level, Vec3 playerPosition) {
         return level.getEntitiesOfClass(LivingEntity.class, new AABB(playerPosition, playerPosition).inflate(3), e -> true)
@@ -81,7 +81,7 @@ public class Execute {
         player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 70, 50));
         targetPatch.getOriginal().addEffect(new MobEffectInstance(EpicFightMobEffects.STUN_IMMUNITY.get(), 40, 0));
         targetPatch.playSound(Sounds.SEKIRO, 1.0F, 1.0F);
-      if (playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND).getWeaponCategory() == CapabilityItem.WeaponCategories.SPEAR ) {
+        if (playerPatch.getHoldingItemCapability(InteractionHand.MAIN_HAND).getWeaponCategory() == CapabilityItem.WeaponCategories.SPEAR ) {
             player.teleportTo(targetPatch.getOriginal().getX() + viewVec.x() * 2.0, targetPatch.getOriginal().getY(), targetPatch.getOriginal().getZ() + viewVec.z() * 2.0);
             playerPatch.playAnimationSynchronized(StarAnimations.SPEAR_EXECUTE, 0.0F);
             targetPatch.playAnimationSynchronized(StarAnimations.SPEAR_EXECUTED, 0.25F, SPPlayAnimation::new);

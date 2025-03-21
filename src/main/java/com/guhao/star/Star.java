@@ -4,6 +4,7 @@ import com.dfdyz.epicacg.network.Netmgr;
 import com.guhao.star.efmex.IntegrationHandler;
 import com.guhao.star.efmex.StarAnimations;
 import com.guhao.star.efmex.StarWeaponCapabilityPresets;
+import com.guhao.star.network.server.NetworkManager;
 import com.guhao.star.regirster.Effect;
 import com.guhao.star.regirster.Entities;
 import com.guhao.star.regirster.Items;
@@ -103,6 +104,7 @@ public class Star {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ParticleType.PARTICLES.register(bus);
         Effect.REGISTRY.register(bus);
+        bus.addListener(this::doCommonStuff);
         Items.ITEMS.register(bus);
         Entities.REGISTRY.register(bus);
         bus.addListener(StarWeaponCapabilityPresets::register);
@@ -116,7 +118,10 @@ public class Star {
         GeckoLib.initialize();
 
     }
+    private void doCommonStuff(final FMLCommonSetupEvent event) {
+        event.enqueueWork(NetworkManager::registerPackets);
 
+    }
     private void setupClient(final FMLClientSetupEvent event){
         MinecraftForge.EVENT_BUS.addListener(this::removeDrownedPatchRenderer);
         StarAnimations.LoadCamAnims();
